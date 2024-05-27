@@ -25,7 +25,7 @@ fn handle_client(mut stream: TcpStream) {
 
 fn save_request_to_file(request: &str) {
     // Define the log file path
-    let file_path = "received_requests/tcp_handler.log";
+    let file_path = "logs/tcp_handler.log";
 
     // Open the file in append mode, create if it doesn't exist
     let mut file = OpenOptions::new()
