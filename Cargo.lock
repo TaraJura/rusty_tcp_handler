@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "web_server_lft"
+name = "tcp_handler"
 version = "0.1.0"
