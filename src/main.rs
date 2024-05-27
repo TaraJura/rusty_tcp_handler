@@ -15,8 +15,8 @@ fn handle_client(mut stream: TcpStream) {
             save_request_to_file(request);
 
             // Create a simple response message
-            let response = "HTTP/1.1 200 OK\r\n\r\nHello, world!";
-            stream.write(response.as_bytes()).unwrap();
+            let response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 16\r\nTcp-Handler: novakj\r\n\r\nrequest received";
+            stream.write_all(response.as_bytes()).unwrap();
             stream.flush().unwrap();
         }
         Err(e) => println!("Failed to read from connection: {}", e),
