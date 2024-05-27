@@ -1,16 +1,15 @@
 use std::net::{TcpListener, TcpStream};
 use std::io::{Read, Write};
 use std::str;
-use std::fs::{self, File};
-use std::io::prelude::*;
+use std::fs::{self, OpenOptions};
 use std::time::SystemTime;
 
 fn handle_client(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
     match stream.read(&mut buffer) {
-        Ok(_) => {
+        Ok(bytes_read) => {
             // Convert buffer to string and print request details
-            let request = str::from_utf8(&buffer).unwrap();
+            let request = str::from_utf8(&buffer[..bytes_read]).unwrap();
             println!("Received request: {}", request);
 
             // Save request to a file
@@ -26,16 +25,19 @@ fn handle_client(mut stream: TcpStream) {
 }
 
 fn save_request_to_file(request: &str) {
-    // Ensure the directory exists
-    let dir_path = "/received_requests";
-    fs::create_dir_all(dir_path).unwrap();
+    // Define the log file path
+    let file_path = "received_requests/tcp_handler.log";
 
-    // Create a unique filename based on the current timestamp
-    let file_name = format!("{}/request_{}.txt", dir_path, SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs());
-    let mut file = File::create(file_name).unwrap();
+    // Open the file in append mode, create if it doesn't exist
+    let mut file = OpenOptions::new()
+        .append(true)
+        .create(true)
+        .open(file_path)
+        .unwrap();
 
-    // Write the request to the file
+    // Write the request to the file with a separator
     file.write_all(request.as_bytes()).unwrap();
+    file.write_all(b"\n---\n").unwrap();
 }
 
 fn main() {
