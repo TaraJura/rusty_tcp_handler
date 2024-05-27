@@ -1,8 +1,7 @@
 use std::net::{TcpListener, TcpStream};
 use std::io::{Read, Write};
 use std::str;
-use std::fs::{self, OpenOptions};
-use std::time::SystemTime;
+use std::fs::{OpenOptions};
 
 fn handle_client(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
@@ -37,7 +36,7 @@ fn save_request_to_file(request: &str) {
 
     // Write the request to the file with a separator
     file.write_all(request.as_bytes()).unwrap();
-    file.write_all(b"\n---\n").unwrap();
+    file.write_all(b"\n|---END_OF_LOG---|\n").unwrap();
 }
 
 fn main() {
